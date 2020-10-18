@@ -1,7 +1,7 @@
 with ranked_visits as
 (
 	select user_id, dt, extract(month from dt) as mnt, row_number() over(partition by user_id order by dt) as dt_rank
-	from public.user_log
+	from user_log
 ),
 cohorts as
 (
@@ -12,13 +12,13 @@ cohorts as
 user_activity as 
 (
 	select user_id, extract(month from dt) as mnt
-	from public.user_log
+	from user_log
 	group by 1,2
 ),
 cross_join as 
 (
 	select user_id, mnt 
-	from (select user_id from public.user_log group by 1) as u, (select extract(month from dt) as mnt from public.user_log group by 1) as m
+	from (select user_id from user_log group by 1) as u, (select extract(month from dt) as mnt from user_log group by 1) as m
 ),
 working_set as 
 (
